@@ -3,9 +3,15 @@ import Home from "./views/Home";
 // 1. 定义 (路由) 组件。
 // 可以从其他文件 import 进来
 const Bar = { template: "<div>bar</div>" };
+const UserProfile = { template: "<div>UserProfile</div>" };
+const UserPosts = { template: "<div>UserPosts</div>" };
 const User = {
-  template:
-    "<div>User {{ $route.params.id }} Pass {{ $route.params.pass }}</div>",
+  template: `
+  <div class="user">
+    <h2>User {{ $route.params.id }}</h2>
+    <router-view></router-view>
+  </div>
+`,
 };
 
 // 2. 定义路由
@@ -16,7 +22,24 @@ const User = {
 const routes = [
   { path: "/home", component: Home, name: "1" },
   { path: "/bar", component: Bar },
-  { path: "/user/:id/pass/:pass", component: User },
+  {
+    path: "/user/:id/",
+    component: User,
+    children: [
+      {
+        // 当 /user/:id/profile 匹配成功，
+        // UserProfile 会被渲染在 User 的 <router-view> 中
+        path: "profile",
+        component: UserProfile,
+      },
+      {
+        // 当 /user/:id/posts 匹配成功
+        // UserPosts 会被渲染在 User 的 <router-view> 中
+        path: "posts",
+        component: UserPosts,
+      },
+    ],
+  },
 ];
 
 export default routes;
